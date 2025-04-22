@@ -18,8 +18,6 @@ app.use('/api/invitations', require('./routes/invitationRoutes'));
 app.use('/api/user', require('./routes/userRoutes'));
 
 
-
-
 app.listen(process.env.PORT || 5000, () =>
     console.log(`🚀 Server running on http://localhost:${process.env.PORT || 5000}`)
 );
