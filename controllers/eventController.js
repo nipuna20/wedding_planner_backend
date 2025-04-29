@@ -57,30 +57,41 @@ exports.deleteEvent = async (req, res) => {
 
 // Update Event by ID
 exports.updateEvent = async (req, res) => {
-    const { name, date } = req.body;
-
     try {
-        // Find the event by ID and update only name and date
-        const event = await Event.findByIdAndUpdate(
-            req.params.id, // event ID from URL parameter
-            { name, date }, // fields to update
-            { new: true }    // return the updated document
+        const { name, date } = req.body;
+        const eventId = req.params.id.trim(); // Trim just in case
+
+        console.log("Attempting to update event with ID:", eventId);
+        const test = await Event.findById(eventId);
+
+        if (!test) {
+            console.log("Event not found using findById"); // Debug log
+        } else {
+            console.log("Event exists:", test);
+        }
+
+        const updatedEvent = await Event.findByIdAndUpdate(
+            eventId,
+            { name, date },
+            { new: true, runValidators: true }
         );
 
-        if (!event) {
+        if (!updatedEvent) {
             return res.status(404).json({ success: false, message: 'Event not found' });
         }
 
-        // Return updated event
         res.status(200).json({
             success: true,
             message: 'Event updated successfully',
-            event
+            event: updatedEvent
         });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Server error' });
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
 };
+
+
+
 
 
 
