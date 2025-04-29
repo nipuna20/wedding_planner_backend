@@ -57,4 +57,35 @@ exports.sendInvitations = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 };
+
+// ✅ Update guest details
+exports.updateGuest = async (req, res) => {
+    try {
+        const { guestId } = req.params;
+        console.log('User ID:', req.user.id);
+        console.log('Guest ID:', guestId);
+
+        const guest = await Guest.findOne({ _id: guestId, user: req.user.id });
+
+        if (!guest) {
+            console.log('Guest not found or user mismatch');
+            return res.status(404).json({ success: false, message: 'Guest not found' });
+        }
+
+        // Update fields
+        if (req.body.name !== undefined) guest.name = req.body.name;
+        if (req.body.phone !== undefined) guest.phone = req.body.phone;
+        if (req.body.side !== undefined) guest.side = req.body.side;
+        if (req.body.category !== undefined) guest.category = req.body.category;
+
+        await guest.save();
+        res.status(200).json({ success: true, guest });
+
+    } catch (error) {
+        console.error('Update Guest Error:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+
 // ❌ Delete a guest

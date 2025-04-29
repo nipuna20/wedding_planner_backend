@@ -6,6 +6,7 @@ const guestController = require('../controllers/guestController');
 // Existing routes
 router.post('/add', protect, guestController.addGuest);
 router.get('/', protect, guestController.getGuests);
+router.put('/:guestId', protect, guestController.updateGuest);
 
 // 🔥 Add this route
 router.post('/send-invitations', protect, guestController.sendInvitations);
